@@ -1,0 +1,54 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from sklearn import linear_model
+%matplotlib inline
+
+df = pd.read_csv('data.csv')
+df.head(11)
+
+cvg = df[['SLEEPING_HOURS','ATTENDANCE','TEST1_MARKS','FINAL_MARKS']]
+cvg.head(9)
+
+ex = cvg[['SLEEPING_HOURS','ATTENDANCE','TEST1_MARKS','FINAL_MARKS']]
+ex.hist()
+plt.show()
+
+plt.scatter(ex.ATTENDANCE,ex.FINAL_MARKS)
+plt.hist(1)
+plt.show()
+
+
+
+msk = np.random.rand(len(cvg)) < 0.8
+train   = cvg[msk]
+test = cvg[~msk]
+
+
+plt.scatter(train.ATTENDANCE , train.FINAL_MARKS)
+plt.xlabel("Attendance")
+plt.ylabel("Final Marks")
+plt.show()
+
+from sklearn import linear_model
+regr = linear_model.LinearRegression()
+x = np.asanyarray(train[['SLEEPING_HOURS','ATTENDANCE','TEST1_MARKS']])
+y = np.asanyarray(train[['FINAL_MARKS']])
+regr.fit(x,y)
+print("The Coefficients: \n", regr.coef_)  
+
+
+The Coefficients: 
+ [[ 8.05285575  0.52588592 -0.8500893 ]]
+
+y_pred = regr.predict(test['ATTENDANCE','TEST1_MARKS'])
+x = np.asanyarray(test['ATTENDANCE','TEST1_MARKS'])
+y = np.asanyarray(test[['FINAL_MARKS']])
+
+print("The Mean Squared Error (MSE): %.2f ", np.mean((y_pred-y)**2))
+print("Variance Score : %.2f ", regr.score(x,y))
+
+
+
+
+
